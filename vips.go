@@ -311,7 +311,10 @@ func Resize(buf []byte, o Options) ([]byte, error) {
 	C.vips_colourspace_0(image, &tmpImage, C.VIPS_INTERPRETATION_sRGB)
 	C.g_object_unref(C.gpointer(image))
 	image = tmpImage
-
+	//patch: https://github.com/DAddYE/vips/issues/24
+	if image == nil {
+		return nil, resizeError()
+	}
 	// Finally save
 	length := C.size_t(0)
 	var ptr unsafe.Pointer
